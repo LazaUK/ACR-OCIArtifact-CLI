@@ -1,8 +1,8 @@
-# Azure Container Registry (ACR): Building Custom Images from OCI Artifacts
+# Azure Container Registry: Building Custom Images from OCI Artifacts
 
 An OCI (Open Container Initiative) artifact is a standardised, portable and secure way to package and distribute software. It defines a common format for container images and supporting files, ensuring consistent execution across various operating systems and container runtimes. Azure Container Registry (ACR) natively supports the creation and management of OCI artifacts.
 
-This repository demonstrates how to use the Azure CLI and ORAS CLI tools to build a customised Docker image of an Nginx web service. It includes a sample tarball and Dockerfile to facilitate end-to-end testing, from creating an OCI artifact to deploying a fully functional web site.
+This repository demonstrates how to use the **Azure CLI** and **ORAS CLI** tools to build a customised Docker image of an Nginx web service. It includes a sample tarball and Dockerfile to facilitate end-to-end testing, from creating an OCI artifact to deploying a fully functional web site.
 
 > [!NOTE]
 > This step-by-step guide assumes you are using Windows 11 on your development machine.
@@ -22,27 +22,32 @@ This repository demonstrates how to use the Azure CLI and ORAS CLI tools to buil
 2. Once you have all the above resources deployed, set relevant environment variables to support execution of CLI commands in the steps below.
 ``` shell
 set MyRegistry=<YOUR_ACR_RESOURCE>
+set MyRegistryFQDN=<YOUR_ACR_RESOURCE>.azurecr.io
 set MyResourceGroup=<RESOURCE_GROUP_OF_ACR>
-set MyImage=<TARGET_ACR_IMAGE_NAME>
-set MyStorage=<YOUR_STORAGE_RESOURCE>
-set MyContainer=<STORAGE_CONTAINER_NAME>
+set MyAgentPool=<ACR_POOL_NAME>
+set MyTask=<CUSTOM_ACR_TASK_NAME>
+set MyImage=<TARGET_IMAGE_NAME>
 set MyBlob=<TARBALL_FILE_NAME>
 ```
-3. Use the ```az login``` command to authenticate with your Azure subscription using Entra ID credentials.
 
-## Step 1: Operations with Azure Storage account
-1. The following command lists all the blobs in the specified Azure Storage container. You can verify the presence of your tarball (_%MyBlob%_) here.
+## Step 1: Create an OCI Artifact
+1. Install ORAS CLI tool as described [here](https://oras.land/docs/installation).
+2. Logic to ACR with your Entra ID credentials:
 ``` PowerShell
-az storage blob list --account-name %MyStorage% --container-name %MyContainer% --output table --auth-mode login
+az acr login --name %MyRegistry%
+```
+3. Push tarball and Dockerfile to ACR create an OCI artifact:
+``` PowerShell
+oras.exe push %MyRegistryFQDN%/demotar:v1 demopage.tar.gz:application/x-tar Dockerfile:text/plain
 ```
 > [!NOTE]
-> For demo purposes, you can re-use the _tarball_ provided with this repo.
-2. If the tarball exists, download the specified blob (_%MyBlob%_) from your storage account and place it in the _./src_ directory on your development machine.
+> _application/x-tar_ and _text/plain_ provide metadata, to describe file types of uploaded tarball and Dockerfile.
+4. Check the manifest of created OCI artifact to verify its structure:
 ``` PowerShell
-az storage blob download --account-name %MyStorage% --container-name %MyContainer% --name %MyBlob% --file ./src/%MyBlob% --auth-mode login
+oras manifest fetch --pretty %MyRegistryFQDN%/demotar:v1
 ```
 
-## Step 2: Operations with Azure Container Registry
+## Step 2: Create an ACR Agent Pool
 1. Use the ```az acr build``` command to build a Docker image using the _Dockerfile_ and the downloaded tarball from the local ```src``` directory. Replace _%MyImage%_ with the desired image name for your development project.
 ``` PowerShell
 az acr build --registry %MyRegistry% --image %MyImage%:latest --file Dockerfile ./src
@@ -50,7 +55,9 @@ az acr build --registry %MyRegistry% --image %MyImage%:latest --file Dockerfile 
 > [!NOTE]
 > For demo purposes, you can re-use the _Dockerfile_ provided with this repo.
 
-## Step 3: Testing customised Nginx Web service
+## Step 3: Build a Docker Image
+
+## Step 4: Deploy a Web site
 1. Verify that your custom Docker image is listed in the ACR repository.
 ``` PowerShell
 az acr repository list --name %MyRegistry% --output table
