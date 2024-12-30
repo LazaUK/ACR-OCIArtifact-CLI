@@ -1,21 +1,22 @@
-# Azure Container Registry (ACR): Building custom image with tarball from a non-public Azure Storage account
-By default, blobs and containers on Azure Storage account are not accessible by anonymous accounts.
+# Azure Container Registry (ACR): Building Custom Images from OCI Artifacts
 
-This repo explains how to use the **_Command Line Interface (CLI)_** to authenticate with _Azure Storage_ and _Azure Container Registry_ resources using **Entra ID** credentials. You'll also learn how to retrieve a tarball and use it to build a customised Docker image of an Nginx web service.
+An OCI (Open Container Initiative) artifact is a standardised, portable and secure way to package and distribute software. It defines a common format for container images and supporting files, ensuring consistent execution across various operating systems and container runtimes. Azure Container Registry (ACR) natively supports the creation and management of OCI artifacts.
+
+This repository demonstrates how to use the Azure CLI and ORAS CLI tools to build a customised Docker image of an Nginx web service. It includes a sample tarball and Dockerfile to facilitate end-to-end testing, from creating an OCI artifact to deploying a fully functional web site.
 
 > [!NOTE]
-> This step-by-step guide assumes that you are using Windows 11 on your development machine.
+> This step-by-step guide assumes you are using Windows 11 on your development machine.
 
-## Table of contents:
-- [Pre-requisites](https://github.com/LazaUK/ACR-ProtectedStorage-CLI#pre-requisites)
-- [Step 1: Operations with Azure Storage account](https://github.com/LazaUK/ACR-ProtectedStorage-CLI#step-1-operations-with-azure-storage-account)
-- [Step 2: Operations with Azure Container Registry](https://github.com/LazaUK/ACR-ProtectedStorage-CLI#step-2-operations-with-azure-container-registry)
-- [Step 3: Testing customised Nginx Web service](https://github.com/LazaUK/ACR-ProtectedStorage-CLI#step-3-testing-customised-nginx-web-service)
+## Table of Contents
+* [Pre-requisites](#pre-requisites)
+* [Step 1: Create an OCI Artifact](#step-1-create-an-oci-artifact)
+* [Step 2: Create an ACR Agent Pool](#step-2-create-an-acr-agent-pool)
+* [Step 3: Build a Docker Image](#step-3-build-a-docker-image)
+* [Step 4: Deploy a Web site](#step-4-deploy-a-web-site)
 
 ## Pre-requisites
 1. To build this demo, you'll need:
     - An Azure subscription with an active Entra ID account,
-    - An Azure Storage account with a container holding the tarball,
     - An Azure Container Registry (ACR),
     - Docker installed on your development machine.
 2. Once you have all the above resources deployed, set relevant environment variables to support execution of CLI commands in the steps below.
