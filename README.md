@@ -15,11 +15,12 @@ This repository demonstrates how to use the **Azure CLI** and **ORAS CLI** tools
 * [Step 4: Deploy a Web site](#step-4-deploy-a-web-site)
 
 ## Pre-requisites
-1. To build this demo, you'll need:
-    - An Azure subscription with an active Entra ID account,
-    - An Azure Container Registry (ACR),
-    - Docker installed on your development machine.
-2. Once you have all the above resources deployed, set relevant environment variables to support execution of CLI commands in the steps below.
+1. Resources:
+    - **Azure Subscription**: Ensure you have an active Azure subscription with an Entra ID account.
+    - **Azure Container Registry**: Create an ACR instance.
+    - **Docker**: Install Docker on your development machine.
+2. Environment Variables:
+    - Once you have these resources, set the following environment variables for the CLI commands in the upcoming steps. Replace the placeholders with your actual values:
 ``` shell
 set MyRegistry=<YOUR_ACR_RESOURCE>
 set MyRegistryFQDN=<YOUR_ACR_RESOURCE>.azurecr.io
