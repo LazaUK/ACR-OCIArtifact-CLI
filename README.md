@@ -21,15 +21,15 @@ This repository demonstrates how to use the **Azure CLI** and **ORAS CLI** tools
     - **Docker**: Install Docker on your development machine.
 2. Environment Variables:
     - Once you have these resources, set the following environment variables for the CLI commands in the upcoming steps. Replace the placeholders with your actual values:
-``` shell
-set MyRegistry=<YOUR_ACR_RESOURCE>
-set MyRegistryFQDN=<YOUR_ACR_RESOURCE>.azurecr.io
-set MyResourceGroup=<RESOURCE_GROUP_OF_ACR>
-set MyAgentPool=<ACR_POOL_NAME>
-set MyTask=<CUSTOM_ACR_TASK_NAME>
-set MyImage=<TARGET_IMAGE_NAME>
-set MyBlob=<TARBALL_FILE_NAME>
-```
+    ``` shell
+    set MyRegistry=<YOUR_ACR_RESOURCE>
+    set MyRegistryFQDN=<YOUR_ACR_RESOURCE>.azurecr.io
+    set MyResourceGroup=<RESOURCE_GROUP_OF_ACR>
+    set MyAgentPool=<ACR_POOL_NAME>
+    set MyTask=<CUSTOM_ACR_TASK_NAME>
+    set MyImage=<TARGET_IMAGE_NAME>
+    set MyBlob=<TARBALL_FILE_NAME>
+    ```
 
 ## Step 1: Create an OCI Artifact
 1. Install ORAS CLI tool as described [here](https://oras.land/docs/installation).
