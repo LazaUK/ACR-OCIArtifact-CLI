@@ -16,9 +16,9 @@ This repository demonstrates how to use the **Azure CLI** and **ORAS CLI** tools
 
 ## Pre-requisites
 1. Resources:
-    - **Azure Subscription**: Ensure you have an active Azure subscription with an Entra ID account.
-    - **Azure Container Registry**: Create an ACR instance.
-    - **Docker**: Install Docker on your development machine.
+    - **_Azure Subscription_**: Ensure you have an active Azure subscription with an Entra ID account.
+    - **_Azure Container Registry_**: Create an ACR instance.
+    - **_Docker_**: Install Docker on your development machine.
 2. Environment Variables:
     - Once you have these resources, set the following environment variables for the CLI commands in the upcoming steps. Replace the placeholders with your actual values:
     ``` shell
@@ -32,29 +32,34 @@ This repository demonstrates how to use the **Azure CLI** and **ORAS CLI** tools
     ```
 
 ## Step 1: Create an OCI Artifact
-1. Install ORAS CLI tool as described [here](https://oras.land/docs/installation).
-2. Logic to ACR with your Entra ID credentials:
+1. Follow the installation instructions for the **_ORAS CLI_** tool [here](https://oras.land/docs/installation).
+2. Login to ACR with your Entra ID credentials:
 ``` PowerShell
 az acr login --name %MyRegistry%
 ```
-3. Push tarball and Dockerfile to ACR create an OCI artifact:
+3. Push the **_tarball_** and **_Dockerfile_** to ACR, creating an OCI artifact:
 ``` PowerShell
 oras.exe push %MyRegistryFQDN%/demotar:v1 demopage.tar.gz:application/x-tar Dockerfile:text/plain
 ```
 > [!NOTE]
-> _application/x-tar_ and _text/plain_ provide metadata, to describe file types of uploaded tarball and Dockerfile.
-4. Check the manifest of created OCI artifact to verify its structure:
+> The _application/x-tar_ and _text/plain_ media types provide metadata describing the uploaded file types.
+4. Verify the structure of the created OCI artifact by fetching its manifest:
 ``` PowerShell
 oras manifest fetch --pretty %MyRegistryFQDN%/demotar:v1
 ```
 
 ## Step 2: Create an ACR Agent Pool
-1. Use the ```az acr build``` command to build a Docker image using the _Dockerfile_ and the downloaded tarball from the local ```src``` directory. Replace _%MyImage%_ with the desired image name for your development project.
+1. To enhance security, you can disable _public access_ to your ACR. This restricts access to your environment.
+2. Create an ACR **_agent pool_** using the following command:
 ``` PowerShell
-az acr build --registry %MyRegistry% --image %MyImage%:latest --file Dockerfile ./src
+az acr agentpool create -n %MyAgentPool% -r %MyRegistry%
+```
+3. Verify that the new agent pool is listed in your registry:
+``` PowerShell
+az acr agentpool list -r %MyRegistry%
 ```
 > [!NOTE]
-> For demo purposes, you can re-use the _Dockerfile_ provided with this repo.
+> An Agent Pool provides the compute resources required to run the Docker build process.
 
 ## Step 3: Build a Docker Image
 
