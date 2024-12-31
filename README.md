@@ -62,18 +62,26 @@ az acr agentpool list -r %MyRegistry%
 > An Agent Pool provides the compute resources required to run the Docker build process.
 
 ## Step 3: Build a Docker Image
-
+1. Create a new ACR task with a system-assigned managed identity:
+``` PowerShell
+az acr task create --image %MyImage%:latest --name %MyTask% --registry %MyRegistry% --resource-group %MyResourceGroup% --auth-mode None --commit-trigger-enabled false --agent-pool lazizacrpool --file Dockerfile --context oci://%MyRegistryFQDN%/demotar:v1 --assign-identity
+```
+2. In Azure portal, assign the **ACRPull** role to the ACR task's managed identity.
+3. Execute the newly created ACR task to build the custom Docker image from the OCI artifact:
+``` PowerShell
+az acr task run --name %MyTask% --registry %MyRegistry%
+```
 
 ## Step 4: Deploy a Web site
-1. Verify that your custom Docker image is listed in the ACR repository.
+1. Verify that your custom Docker image is listed in the ACR repository:
 ``` PowerShell
 az acr repository list --name %MyRegistry% --output table
 ```
-2. You can use the ```show-tags``` command to check the available tags for your image.
+2. You can use the ```show-tags``` command to check the available tags for your image:
 ``` PowerShell
 az acr repository show-tags --name %MyRegistry% --repository %MyImage% --output table
 ```
-3. Now you are ready to run the image as a Docker container. This command maps port 8080 on your local machine to port 80 within the container.
+3. Now you can deploy your Web site by running the image as a Docker container. This command maps port 8080 on your local machine to port 80 within the container:
 ``` PowerShell
 docker run -d --name %MyTask% -p 8080:80 %MyRegistry%.azurecr.io/%MyImage%:latest
 ```
