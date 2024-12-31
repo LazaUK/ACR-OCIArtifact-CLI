@@ -41,12 +41,12 @@ az acr login --name %MyRegistry%
 ``` PowerShell
 oras.exe push %MyRegistryFQDN%/demotar:v1 demopage.tar.gz:application/x-tar Dockerfile:text/plain
 ```
-> [!NOTE]
-> The _application/x-tar_ and _text/plain_ media types provide metadata describing the uploaded file types.
 4. Verify the structure of the created OCI artifact by fetching its manifest:
 ``` PowerShell
 oras manifest fetch --pretty %MyRegistryFQDN%/demotar:v1
 ```
+> [!NOTE]
+> The _application/x-tar_ and _text/plain_ media types provide metadata describing the uploaded file types.
 
 ## Step 2: Create an ACR Agent Pool
 1. To enhance security, you can disable _public access_ to your ACR. This restricts access to your environment.
@@ -62,6 +62,7 @@ az acr agentpool list -r %MyRegistry%
 > An Agent Pool provides the compute resources required to run the Docker build process.
 
 ## Step 3: Build a Docker Image
+
 
 ## Step 4: Deploy a Web site
 1. Verify that your custom Docker image is listed in the ACR repository.
