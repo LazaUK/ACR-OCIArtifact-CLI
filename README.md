@@ -64,7 +64,7 @@ az acr agentpool list -r %MyRegistry%
 ## Step 3: Build a Docker Image
 1. Create a new ACR task with a system-assigned managed identity:
 ``` PowerShell
-az acr task create --image %MyImage%:latest --name %MyTask% --registry %MyRegistry% --resource-group %MyResourceGroup% --auth-mode None --commit-trigger-enabled false --agent-pool lazizacrpool --file Dockerfile --context oci://%MyRegistryFQDN%/demotar:v1 --assign-identity
+az acr task create --image %MyImage%:latest --name %MyTask% --registry %MyRegistry% --resource-group %MyResourceGroup% --auth-mode Default --commit-trigger-enabled false --agent-pool lazizacrpool --file Dockerfile --context oci://%MyRegistryFQDN%/demotar:v1 --assign-identity
 ```
 2. In Azure portal, assign the **ACRPull** role to the ACR task's managed identity.
 3. Execute the newly created ACR task to build the custom Docker image from the OCI artifact:
