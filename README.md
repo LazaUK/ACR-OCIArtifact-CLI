@@ -71,6 +71,8 @@ az acr task create --image %MyImage%:latest --name %MyTask% --registry %MyRegist
 ``` PowerShell
 az acr task run --name %MyTask% --registry %MyRegistry%
 ```
+> [!NOTE]
+> Use of trusted Azure services (when public access is blocked) is supported for a system-assigned managed identity only.
 
 ## Step 4: Deploy a Web site
 1. Verify that your custom Docker image is listed in the ACR repository:
